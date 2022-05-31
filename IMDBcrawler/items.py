@@ -18,6 +18,8 @@ class Movie(scrapy.Item):
     top_cast = scrapy.Field()
     url = scrapy.Field()
     uid = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
 
 
 class Actor(scrapy.Item):

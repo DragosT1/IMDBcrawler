@@ -16,7 +16,7 @@ class ImdbcrawlerPipeline:
 
 class MoviePipeline:
     def process_item(self, item, spider):
-        ipdb.set_trace()
+        # ipdb.set_trace()
         return item
 
 
