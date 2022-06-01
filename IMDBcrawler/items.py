@@ -25,6 +25,8 @@ class Movie(scrapy.Item):
 class Actor(scrapy.Item):
     name = scrapy.Field()
     uid = scrapy.Field()
+    filmography_movie_url = scrapy.Field()
+    filmography_movie_title = scrapy.Field()
 
 
 class ActorsAndMovies(scrapy.Item):

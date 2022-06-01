@@ -17,6 +17,7 @@ class ImdbSpider(scrapy.Spider):
         "ITEM_PIPELINES": {
             "IMDBcrawler.pipelines.MoviePipeline": 300,
             "scrapy.pipelines.images.ImagesPipeline": 299,
+            "IMDBcrawler.pipelines.SimpleStoragePipeline": 301,
         },
         "IMAGES_STORE": "images",
     }
@@ -84,18 +85,20 @@ class ImdbSpider(scrapy.Spider):
         for link in actor_url_set:
             yield scrapy.Request(url=link, callback=self.parse_actor)
 
-    # def parse_actor(self, response):
-    #     actor_items = response.xpath("//*[@id='content-2-wide']")
-    #     actor = Actor()
-    #     actor["name"] = response.xpath("//h1/span[@class='itemprop']/text()").get()
-    #     uid = response.url
-    #     actor["uid"] = uid[26 : len(uid) - 1]
-    #     actor["filmography_movie_url"] = response.xpath(
-    #         "//div[@class='filmo-category-section']/div[contains(@id,'act')]/b/a/@href"
-    #     ).getall()
-    #     # [x = ("https://www.imdb.com/title" + x) for x in arr]
-    #     # actor["filmography_movie_url"] = arr
-    #     actor["filmography_movie_title"] = response.xpath(
-    #         "//div[@class='filmo-category-section']/div[contains(@id,'act')]/b/a/text()"
-    #     ).getall()
-    #     yield actor
+    def parse_actor(self, response):
+        actor_items = response.xpath("//*[@id='content-2-wide']")
+        actor = Actor()
+        actor["name"] = response.xpath("//h1/span[@class='itemprop']/text()").get()
+        uid = response.url
+        actor["uid"] = uid[26 : len(uid) - 1]
+
+        actor["filmography_movie_url"] = response.xpath(
+            "//div[@class='filmo-category-section']/div[contains(@id,'act')]/b/a/@href"
+        ).getall()
+        actor["filmography_movie_url"] = list(
+            map(lambda x: x.replace("/title/", "https://www.imdb.com/title/"), actor["filmography_movie_url"])
+        )
+        actor["filmography_movie_title"] = response.xpath(
+            "//div[@class='filmo-category-section']/div[contains(@id,'act')]/b/a/text()"
+        ).getall()
+        yield actor
