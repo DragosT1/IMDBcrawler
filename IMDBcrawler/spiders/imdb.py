@@ -58,10 +58,9 @@ class ImdbSpider(scrapy.Spider):
         # print(movie["title"])
 
         # ipdb.set_trace()
-
-        movie["image_urls"] = [
-            "https://m.media-amazon.com/images/M/MV5BODQxYWM2ODItYjE4ZC00YzAxLTljZDQtMjRjMmE0ZGMwYzZjXkEyXkFqcGdeQXVyODIyOTEyMzY@._V1_QL75_UY562_CR21,0,380,562_.jpg"
-        ]
+        movie["image_urls"] = response.xpath(
+            "//div[@class='ipc-media ipc-media--poster-27x40 ipc-image-media-ratio--poster-27x40 ipc-media--baseAlt ipc-media--poster-l ipc-poster__poster-image ipc-media__img']/img[@class='ipc-image']/@src"
+        ).getall()
 
         movie["rating"] = response.xpath(
             "//*[@id='__next']/main/div/section[1]/section/div[3]/section/section/div[1]/div[2]/div/div[1]/a/div/div/div[2]/div[1]/span[1]/text()"
