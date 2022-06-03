@@ -18,8 +18,10 @@ class ImdbSpider(scrapy.Spider):
             "IMDBcrawler.pipelines.MoviePipeline": 300,
             "scrapy.pipelines.images.ImagesPipeline": 299,
             "IMDBcrawler.pipelines.SimpleStoragePipeline": 301,
+            "IMDBcrawler.pipelines.SqlitePipeline": 298,
         },
         "IMAGES_STORE": "images",
+        "CONCURRENT_REQUESTS": 30,
     }
 
     def parse(self, response):
@@ -34,7 +36,7 @@ class ImdbSpider(scrapy.Spider):
         # print(arr)
         # print(len(arr))
 
-        for link in arr[:5]:
+        for link in arr[:10]:
             yield scrapy.Request(link, callback=self.parse_movie)
 
     def parse_movie(self, response):
@@ -54,7 +56,7 @@ class ImdbSpider(scrapy.Spider):
 
         movie["title"] = response.xpath(
             "//*[@id='__next']/main/div/section[1]/section/div[3]/section/section/div[1]/div[1]/h1/text()"
-        ).getall()[0]
+        ).get()
         # print(movie["title"])
 
         # ipdb.set_trace()
